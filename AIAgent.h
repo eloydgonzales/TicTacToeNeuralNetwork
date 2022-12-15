@@ -15,7 +15,7 @@ public:
     ~AIAgent();
     void SetBrain(vector<int> architecture, 
         double learningRate,
-        NeuralNetwork::Activation SIGMOID);
+        NeuralNetwork::Activation activation);
     void AdjustBrain(double percent);
     int GetMove(RowVector& input);
     int GetWins(){return wins;};
@@ -25,10 +25,18 @@ public:
 
 AIAgent::AIAgent(/* args */)
 {
+    SetBrain({9, 15, 15, 9}, 0.05, NeuralNetwork::Activation::SIGMOID);
 }
 
 AIAgent::~AIAgent()
 {
+}
+
+void AIAgent::SetBrain(vector<int> architecture, 
+        double learningRate,
+        NeuralNetwork::Activation activation)
+{
+    brain.init(architecture, learningRate, activation);
 }
 
 int AIAgent::GetMove(RowVector& input)
@@ -39,7 +47,8 @@ int AIAgent::GetMove(RowVector& input)
     for (size_t i = 0; i < 9; i++)
     {
         // find the highest output to an empty space
-        if (brain.output(i) > largestVal && input[i] < 0.01)// input[i] < 0.01 checks if input[i] is close to 0
+        //std::cout << input[i] << "\n";
+        if (brain.output(i) > largestVal && input[i] * input[i] < 0.01)// input[i] * input[i] < 0.01 checks if input[i] is close to 0 regardless of its sign (+/-)
         {
             largestVal = brain.output(i);
             largestIndex = i;
