@@ -25,6 +25,7 @@ public:
     bool IsGameOver(){return gameOver;};
     Space GetWinner(){return winner;};
     void PlayGame(AIAgent &player1, AIAgent &player2);
+    void ResetGame();
 private:
     Space board[9]{none, none, none, none, none, none, none, none, none};
     Space currentPlayer {xplayer};
@@ -139,11 +140,12 @@ void TicTacToeGame::GetBoard(RowVector& board)
 
 void TicTacToeGame::PlayGame(AIAgent &player1, AIAgent &player2)
 {
+    ResetGame();
     RowVector input(9);
     do
     {
-        PrintBoard();
-        std::cout << currentPlayer << "'s turn \n";
+        // PrintBoard();
+        // std::cout << currentPlayer << "'s turn \n";
 
         GetBoard(input);
 
@@ -169,8 +171,20 @@ void TicTacToeGame::PlayGame(AIAgent &player1, AIAgent &player2)
     
 
     // display winner
-    PrintBoard();
-    std::cout << winner << " wins\n";
+    // PrintBoard();
+    // std::cout << winner << " wins\n";
+}
+
+void TicTacToeGame::ResetGame()
+{
+    for (size_t i = 0; i < 9; i++)
+    {
+        board[i] = none;
+    }
+    currentPlayer = xplayer;
+    winner = none;
+    gameOver = false;
+    moves = 0;
 }
 
 #endif

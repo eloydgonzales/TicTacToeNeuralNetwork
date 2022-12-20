@@ -20,7 +20,10 @@ public:
     int GetMove(RowVector& input);
     int GetWins(){return wins;};
     void IncrementWins(){wins++;};
-    void Reset();
+    void ResetWins();
+
+    bool operator<(AIAgent& agent);
+    bool operator>(AIAgent& agent);
 };
 
 AIAgent::AIAgent(/* args */)
@@ -37,6 +40,11 @@ void AIAgent::SetBrain(vector<int> architecture,
         NeuralNetwork::Activation activation)
 {
     brain.init(architecture, learningRate, activation);
+}
+
+void AIAgent::AdjustBrain(double percent)
+{
+    brain.AdjustWeights(percent);
 }
 
 int AIAgent::GetMove(RowVector& input)
@@ -57,5 +65,27 @@ int AIAgent::GetMove(RowVector& input)
     return largestIndex;
 }
 
+void AIAgent::ResetWins()
+{
+    wins = 0;
+}
+
+bool AIAgent::operator<(AIAgent &agent)
+{
+    if (wins < agent.wins)
+    {
+        return true;
+    }
+    return false;
+}
+
+bool AIAgent::operator>(AIAgent& agent)
+{
+    if (wins > agent.wins)
+    {
+        return true;
+    }
+    return false;
+}
 
 #endif

@@ -11,15 +11,34 @@ int main()
 {
     std::cout << "hello \n";
 
-    AIAgent player1, player2;
-    AIAgent players[10];
-    RowVector input(9);
-    
+    const int numberOfAI{ 10 };
+    const int numberOfGenerations{ 10 };
 
+    AIAgent players[numberOfAI];
     TicTacToeGame game;
 
-    //game.PlayGame(player1, player2);
-    game.PlayGame(players[1], players[2]);
+    for (size_t i = 0; i < numberOfGenerations; i++)
+    {
+        for (size_t i = 0; i < numberOfAI - 1; i++)
+        {
+            for (size_t j = i + 1; j < numberOfAI; j++)
+            {
+                game.PlayGame(players[i], players[j]);
+                game.PlayGame(players[j], players[i]);
+            }
+        }
+        sort(std::begin(players), std::end(players));// the problem
 
+        for (size_t i = 0; i < numberOfAI; i++)
+        {
+            std::cout << players[i].GetWins() << "\n";
+            players[i].ResetWins();
+        }
+        
+        for (size_t i = 0; i < numberOfAI / 2; i++)
+        {
+            players[i].AdjustBrain(0.1);
+        }
+    }
     return 0;
 }
