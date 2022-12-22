@@ -146,6 +146,10 @@ public:
 	// adjust weights
 	void AdjustWeights(double percent);
 
+    // Eloyd added copy constructors
+    NeuralNetwork(const NeuralNetwork& other);
+    NeuralNetwork& operator=(NeuralNetwork other);
+
     // Eloyd added
 	// random engine
 	default_random_engine engine;// todo make static

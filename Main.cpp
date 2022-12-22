@@ -6,6 +6,7 @@
 #include "AIAgent.h"
 #include <eigen3/Eigen/Eigen>
 #include <algorithm>
+#include <fstream>
 
 int main()
 {
@@ -27,7 +28,7 @@ int main()
                 game.PlayGame(players[j], players[i]);
             }
         }
-        sort(std::begin(players), std::end(players));// the problem
+        sort(std::begin(players), std::end(players));
 
         for (size_t i = 0; i < numberOfAI; i++)
         {

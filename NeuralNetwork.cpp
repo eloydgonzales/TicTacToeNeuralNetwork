@@ -355,3 +355,29 @@ void NeuralNetwork::AdjustWeights(double percent)
     for (auto it = mWeights.begin(), _end = mWeights.end(); it != _end; it++)
         **it = **it * dist(engine);
 }
+
+// Eloyd added
+NeuralNetwork::NeuralNetwork(const NeuralNetwork &other)
+	: mActivation(other.mActivation), 
+	mLearningRate(other.mLearningRate), 
+	mArchitecture(other.mArchitecture), 
+	mNeurons(other.mNeurons), 
+	mErrors(other.mErrors), 
+	mWeights(other.mWeights)
+{
+	mConfusion = new Matrix(mArchitecture.back(), mArchitecture.back());
+	*mConfusion = *other.mConfusion;
+}
+
+// Eloyd added
+NeuralNetwork &NeuralNetwork::operator=(NeuralNetwork other)
+{
+    std::swap(mActivation, other.mActivation);
+    std::swap(mLearningRate, other.mLearningRate);
+    std::swap(mArchitecture, other.mArchitecture);
+    std::swap(mNeurons, other.mNeurons);
+    std::swap(mErrors, other.mErrors);
+    std::swap(mWeights, other.mWeights);
+    *mConfusion = *other.mConfusion;
+    return *this;
+}
