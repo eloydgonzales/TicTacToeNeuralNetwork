@@ -349,11 +349,19 @@ bool NeuralNetwork::load(const char* filename) {
 }
 
 // Eloyd added
-void NeuralNetwork::AdjustWeights(double percent)// todo fix this is not working well
+void NeuralNetwork::AdjustWeights(double range)
 {
-    uniform_real_distribution<double> dist(-percent, percent);
-    for (auto it = mWeights.begin(), _end = mWeights.end(); it != _end; it++)
-        **it = **it * dist(engine);
+    uniform_real_distribution<double> dist(-range, range);
+
+	// update weights
+	for (size_t i = 0, size = mWeights.size(); i < size; i++)
+		for (int row = 0, rows = (int)mWeights[i]->rows(); row < rows; row++)
+			for (int col = 0, cols = (int)mWeights[i]->cols(); col < cols; col++)
+			{
+				// std::cout << mWeights[i]->coeffRef(row, col) << "\t ";
+				mWeights[i]->coeffRef(row, col) += dist(engine);
+				// std::cout << mWeights[i]->coeffRef(row, col) << "\n";
+			}
 }
 
 // Eloyd added

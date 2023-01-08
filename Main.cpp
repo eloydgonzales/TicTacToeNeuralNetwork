@@ -13,13 +13,13 @@ int main()
     std::cout << "hello \n";
 
     const int numberOfAI{ 10 };
-    const int numberOfGenerations{ 10 };
+    const int numberOfGenerations{ 100 };
     const int numberOfSavedAgents{ numberOfAI };
 
     AIAgent players[numberOfAI];
     TicTacToeGame game;
-    int filename{ 1 };
 
+    // load Agent's brains
     for (size_t i = 0; i < numberOfSavedAgents; i++)
     {
         if (!players[i].LoadBrain("savedBrains/" + to_string(i) + ".txt"))
@@ -50,14 +50,14 @@ int main()
         {
             std::cout << players[i].GetWins() << "\n";
             players[i].ResetWins();
+            players[i].AdjustBrain(0.5);
         }
         
         // todo make from 0 to 90% mutate less and less
-        // for (size_t i = 0; i < numberOfAI / 2; i++)
-        // {
-        //     players[i] = players[i + numberOfAI / 2];
-        //     players[i].AdjustBrain(0.5);
-        // }
+        for (size_t i = 0; i < floor(numberOfAI * 0.5); i++)
+        {
+            players[i].AdjustBrain(1 - i / numberOfAI);
+        }
     }
 
     // have each AIAgent play 2 games against every other AIAgent
@@ -73,33 +73,34 @@ int main()
     // sorts players by number of wins
     sort(std::begin(players), std::end(players));
 
+    // save Agent's brains
     for (size_t i = 0; i < numberOfSavedAgents; i++)
     {
         players[i].SaveBrain("savedBrains/" + to_string(i) + ".txt");
     }
     
 
-    // do
-    // {
-    //     game.ResetGame();
-    //     RowVector input(9);
-    //     int playerSelection{ 0 };
-    //     do
-    //     {
-    //         game.PrintBoard();
-    //         std::cout << game.GetCurrentPlayer() << "'s turn \n";
+    do
+    {
+        game.ResetGame();
+        RowVector input(9);
+        int playerSelection{ 0 };
+        do
+        {
+            game.PrintBoard();
+            std::cout << game.GetCurrentPlayer() << "'s turn \n";
 
-    //         cin >> playerSelection;
+            cin >> playerSelection;
 
-    //         game.NextMove(playerSelection);
+            game.NextMove(playerSelection);
 
-    //         game.GetBoard(input);
-    //         game.NextMove(players[9].GetMove(input));
-    //     } while (!game.IsGameOver());
-    //     // display winner
-    //     game.PrintBoard();
-    //     std::cout << game.GetWinner() << " wins\n";
-    // } while (true);
+            game.GetBoard(input);
+            game.NextMove(players[numberOfAI - 1].GetMove(input));
+        } while (!game.IsGameOver());
+        // display winner
+        game.PrintBoard();
+        std::cout << game.GetWinner() << " wins\n";
+    } while (true);
     
     
 

@@ -44,9 +44,9 @@ void AIAgent::SetBrain(vector<int> architecture,
     brain.init(architecture, learningRate, activation);
 }
 
-void AIAgent::AdjustBrain(double percent)
+void AIAgent::AdjustBrain(double range)
 {
-    brain.AdjustWeights(percent);
+    brain.AdjustWeights(range);
 }
 
 int AIAgent::GetMove(RowVector& input)
