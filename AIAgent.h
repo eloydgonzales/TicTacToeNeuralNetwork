@@ -13,14 +13,16 @@ private:
 public:
     AIAgent(/* args */);
     ~AIAgent();
-    void SetBrain(vector<int> architecture, 
-        double learningRate,
-        NeuralNetwork::Activation activation);
+    void SetBrain(vector<int> architecture = {9, 15, 15, 9}, 
+        double learningRate = 0.05,
+        NeuralNetwork::Activation activation = NeuralNetwork::Activation::SIGMOID);
     void AdjustBrain(double percent);
     int GetMove(RowVector& input);
     int GetWins(){return wins;};
     void IncrementWins(){wins++;};
     void ResetWins();
+    void SaveBrain(const string file);
+    bool LoadBrain(const string file);
 
     bool operator<(AIAgent& agent);
     bool operator>(AIAgent& agent);
@@ -28,7 +30,7 @@ public:
 
 AIAgent::AIAgent(/* args */)
 {
-    SetBrain({9, 15, 15, 9}, 0.05, NeuralNetwork::Activation::SIGMOID);
+    SetBrain();
 }
 
 AIAgent::~AIAgent()
@@ -68,6 +70,16 @@ int AIAgent::GetMove(RowVector& input)
 void AIAgent::ResetWins()
 {
     wins = 0;
+}
+
+void AIAgent::SaveBrain(const string file)
+{
+    brain.save(file.c_str());
+}
+
+bool AIAgent::LoadBrain(const string file)
+{
+    return brain.load(file.c_str());
 }
 
 bool AIAgent::operator<(AIAgent &agent)

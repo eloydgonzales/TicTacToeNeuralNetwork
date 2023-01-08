@@ -349,7 +349,7 @@ bool NeuralNetwork::load(const char* filename) {
 }
 
 // Eloyd added
-void NeuralNetwork::AdjustWeights(double percent)
+void NeuralNetwork::AdjustWeights(double percent)// todo fix this is not working well
 {
     uniform_real_distribution<double> dist(-percent, percent);
     for (auto it = mWeights.begin(), _end = mWeights.end(); it != _end; it++)
