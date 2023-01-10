@@ -7,17 +7,25 @@
 #include <eigen3/Eigen/Eigen>
 #include <algorithm>
 #include <fstream>
+#include <thread>
+
+void playGame(TicTacToeGame game, AIAgent& player1, AIAgent& player2)
+{
+    game.PlayGame(player1, player2);
+}
 
 int main()
 {
     std::cout << "hello \n";
 
-    const int numberOfAI{ 10 };
-    const int numberOfGenerations{ 100 };
+    const int numberOfAI{ 100 };
+    const int numberOfGenerations{ 5000 };
     const int numberOfSavedAgents{ numberOfAI };
 
     AIAgent players[numberOfAI];
     TicTacToeGame game;
+
+    std::vector<std::thread> threads;
 
     // load Agent's brains
     for (size_t i = 0; i < numberOfSavedAgents; i++)
@@ -39,10 +47,17 @@ int main()
             for (size_t j = i + 1; j < numberOfAI; j++)
             {
                 // in the first game players[i] goes first in the second players[j] goes first
+                // threads.push_back(std::thread(playGame, game, std::ref(players[i]), std::ref(players[j])));
+                // threads.push_back(std::thread(playGame, game, std::ref(players[j]), std::ref(players[i])));
                 game.PlayGame(players[i], players[j]);
                 game.PlayGame(players[j], players[i]);
             }
         }
+        for (auto &th : threads)
+        {
+            th.join();
+        }
+        threads.clear();
         // sorts players by number of wins
         sort(std::begin(players), std::end(players));
 
@@ -50,7 +65,6 @@ int main()
         {
             std::cout << players[i].GetWins() << "\n";
             players[i].ResetWins();
-            players[i].AdjustBrain(0.5);
         }
         
         // todo make from 0 to 90% mutate less and less
